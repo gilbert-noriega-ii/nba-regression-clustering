@@ -79,3 +79,43 @@ def wrangle_nba():
     #splitting into train, validate test
     train, validate, test = nba_split(nba)
     return train, validate, test
+
+def scaled_wrangle_nba():
+    '''
+    This function scales the data and splits 
+    the nba seasons into train, validate, and test sets
+    '''
+    #save csv as a dataframe
+    nba = pd.read_csv('nba.games.stats.csv')
+    #preppring dataframe nba stats
+    nba = prep_nba(nba)
+    #splitting into train, validate test
+    train, validate, test = nba_split(nba)
+    #assigns the scaling method as min-max scaler
+    scaler = sklearn.preprocessing.MinMaxScaler()
+    #identifies the columns to scale
+    columns_to_scale = ['FieldGoals.', 'X3PointShots.', 'FreeThrows.', 'OffRebounds', 'TotalRebounds', 'Assists', 'Steals', 'Blocks', 'Turnovers', 'TotalFouls', 'Opp.FieldGoals.', 'Opp.3PointShots.', 'Opp.FreeThrows.', 'Opp.OffRebounds', 'Opp.TotalRebounds', 'Opp.Assists', 'Opp.Steals', 'Opp.Blocks', 'Opp.Turnovers', 'Opp.TotalFouls']
+    #adds '_scaled' to the end of the newly scaled columns to identify differences
+    new_column_names = [c + '_scaled' for c in columns_to_scale]
+    #fts the columns to the scaler
+    scaler.fit(train[columns_to_scale])
+    #concatonates the newly created scaled columns to their respective data sets,
+    #adds 'new_column_names' as the label to the added columns
+    #uses the original index since the new columns no longer have an index
+    train = pd.concat([
+        train,
+        pd.DataFrame(scaler.transform(train[columns_to_scale]), columns=new_column_names, index=train.index),
+    ], axis=1)
+    validate = pd.concat([
+        validate,
+        pd.DataFrame(scaler.transform(validate[columns_to_scale]), columns=new_column_names, index=validate.index),
+    ], axis=1)
+    test = pd.concat([
+        test,
+        pd.DataFrame(scaler.transform(test[columns_to_scale]), columns=new_column_names, index=test.index),
+    ], axis=1)
+    #drops non-scaled data
+    train = train.drop(columns = {'FieldGoals.', 'X3PointShots.', 'FreeThrows.', 'OffRebounds', 'TotalRebounds', 'Assists', 'Steals', 'Blocks', 'Turnovers', 'TotalFouls', 'Opp.FieldGoals.', 'Opp.3PointShots.', 'Opp.FreeThrows.', 'Opp.OffRebounds', 'Opp.TotalRebounds', 'Opp.Assists', 'Opp.Steals', 'Opp.Blocks', 'Opp.Turnovers', 'Opp.TotalFouls'})
+    validate = validate.drop(columns = {'FieldGoals.', 'X3PointShots.', 'FreeThrows.', 'OffRebounds', 'TotalRebounds', 'Assists', 'Steals', 'Blocks', 'Turnovers', 'TotalFouls', 'Opp.FieldGoals.', 'Opp.3PointShots.', 'Opp.FreeThrows.', 'Opp.OffRebounds', 'Opp.TotalRebounds', 'Opp.Assists', 'Opp.Steals', 'Opp.Blocks', 'Opp.Turnovers', 'Opp.TotalFouls'})
+    test = test.drop(columns = {'FieldGoals.', 'X3PointShots.', 'FreeThrows.', 'OffRebounds', 'TotalRebounds', 'Assists', 'Steals', 'Blocks', 'Turnovers', 'TotalFouls', 'Opp.FieldGoals.', 'Opp.3PointShots.', 'Opp.FreeThrows.', 'Opp.OffRebounds', 'Opp.TotalRebounds', 'Opp.Assists', 'Opp.Steals', 'Opp.Blocks', 'Opp.Turnovers', 'Opp.TotalFouls'})
+    return train, validate, test
