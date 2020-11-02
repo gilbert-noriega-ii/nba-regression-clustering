@@ -1,28 +1,39 @@
 <a id='section_6'></a>
-<p align="center"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQgb_k_qLchH8ScNcN2YtryfXWp8FWBg7IZyA&usqp=CAU"></p>
+
+<p align = "center"><img width="300" alt="Screen Shot 2020-11-01 at 8 47 52 PM" src="https://user-images.githubusercontent.com/68249276/97825198-a3d6f800-1c83-11eb-8953-863b1bc47afc.png">
+</p>
 
 
-<h1><center>NBA Regression/Clustering Project</center></h1>
-<center> Author: Gilbert Noriega </center>
 
-[About the Project](#section_1) [Data Dictionary](#section_2) [Initial Hypotheses/Thoughts](#section_3) [Project Plan](#section_4) [How to Reproduce](#section_5)
+<h1 align = "center">NBA Regression/Clustering Project</h1>
+<p align = "center">Author: Gilbert Noriega</p>
+
+[About the Project](#section_1) || [Data Dictionary](#section_2) ||  [Initial Hypotheses/Thoughts](#section_3) || [Project Plan](#section_4) || [How to Reproduce](#section_5)
 
 
+<br>
 
 <a id='section_1'></a>
 ## About the Project
 > Just like most competitive games, whoever has the most points at the end wins. In this project we will dive deep into the data and see what features drive the point total besides the number of field goals and three point shots. Clustering methods will be used to combine like features and these clusters will undergo statictical testing to deem their significance. In the end, Regression models will determine the ones of most importance. 
 ___
 
-### Background
+<br>
+
+## Background
 > The NBA has a collection of 30 teams that all play 82 games in total. A collection of stats are collected throughout each game and although the highest amount of points decides the winner, the outcome could be swayed by other factors. There are a multitude of stats, simple and complex, that are collected through each and every game. In this repository we will focus on the more basic stats from the 2014-2018 NBA seasons.
 
 ___
+
+<br>
+
 >*Acknowledgement:The dataset was mined from Basketball Reference* 
 
 ___
 
-### Goals
+<br>
+
+## Goals
 > My goal for this project is to create a regression model and use clustering methods that will accuractely predict the final points scored for NBA teams during the 2014 and 2018 seasons. I will deliver the following in a github repository: 
 >
 > - A clearly named final notebook. This notebook will be what will contain plenty of markdown documentation and cleaned up code.
@@ -32,6 +43,8 @@ ___
 [back to the top](#section_6)
 
 ___
+
+<br>
 
 <a id='section_2'></a>
 ## Data Dictionary
@@ -59,12 +72,19 @@ ___
 | home_is_west | home team is in the western conference |
 | away_is_west | away team is in the western conference |
 
+<br>
+
 |  Target  | Definition |
 |:-------- |:---------- |
 |  W  | win for the home team |
 
+<br>
+
 [back to the top](#section_6)
 ___
+
+<br>
+
 <a id='section_3'></a>
 ## Initial Hypothesis & Thoughts
 
@@ -72,6 +92,8 @@ ___
 >
 > - We could add a new feature?
 > - Should I turn the categorical variables into booleans?
+
+<br>
 
 >### Hypothesis
 > - Hypothesis 1: Is there a relationship between wins and home games?
@@ -96,6 +118,9 @@ ___
 
 [back to the top](#section_6)
 ___
+
+<br>
+
 <a id='section_4'></a>
 ## Project Plan: Breaking it Down
 
@@ -132,6 +157,8 @@ ___
 [back to the top](#section_6)
 
 ___
+
+<br>
 
 <a id='section_5'></a>
 ## How to Reproduce
