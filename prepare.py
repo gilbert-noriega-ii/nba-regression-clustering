@@ -27,7 +27,7 @@ def prep_nba(season):
     wins = pd.get_dummies(nba.WINorLOSS, drop_first = True)
 
     #dropping unnecessary columns
-    nba = nba.drop(columns = ['Unnamed: 0', 'Home', 'WINorLOSS', 'Date', 'Game', 'TeamPoints', 'OpponentPoints', 'FieldGoals', 'Opp.FieldGoals', 'FieldGoalsAttempted', 'Opp.FieldGoalsAttempted', 'X3PointShots', 'Opp.3PointShots', 'X3PointShotsAttempted', 'Opp.3PointShotsAttempted', 'FreeThrows', 'Opp.FreeThrows', 'FreeThrowsAttempted', 'Opp.FreeThrowsAttempted', 'Conference', 'Opp.Conference'])
+    nba = nba.drop(columns = ['Unnamed: 0', 'Home', 'WINorLOSS', 'Date', 'Game', 'OpponentPoints', 'FieldGoals', 'Opp.FieldGoals', 'FieldGoalsAttempted', 'Opp.FieldGoalsAttempted', 'X3PointShots', 'Opp.3PointShots', 'X3PointShotsAttempted', 'Opp.3PointShotsAttempted', 'FreeThrows', 'Opp.FreeThrows', 'FreeThrowsAttempted', 'Opp.FreeThrowsAttempted', 'Conference', 'Opp.Conference'])
 
     #adding dummy variables back into the main dataframe
     nba = pd.concat([nba, conference, oppconference, home, wins], axis = 1)
