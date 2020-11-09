@@ -23,14 +23,11 @@ def prep_nba(season):
     #changing home into dummy variable
     home = pd.get_dummies(nba.Home, drop_first = True)
 
-    #changing target variable into dummy variable
-    wins = pd.get_dummies(nba.WINorLOSS, drop_first = True)
-
     #dropping unnecessary columns
-    nba = nba.drop(columns = ['Unnamed: 0', 'Home', 'WINorLOSS', 'Date', 'Game', 'OpponentPoints', 'FieldGoals', 'Opp.FieldGoals', 'FieldGoalsAttempted', 'Opp.FieldGoalsAttempted', 'X3PointShots', 'Opp.3PointShots', 'X3PointShotsAttempted', 'Opp.3PointShotsAttempted', 'FreeThrows', 'Opp.FreeThrows', 'FreeThrowsAttempted', 'Opp.FreeThrowsAttempted', 'Conference', 'Opp.Conference'])
+    nba = nba.drop(columns = ['Unnamed: 0', 'Home', 'WINorLOSS', 'WINorLOSS', 'Date', 'Game', 'OpponentPoints', 'FieldGoals', 'Opp.FieldGoals', 'FieldGoalsAttempted', 'Opp.FieldGoalsAttempted', 'X3PointShots', 'Opp.3PointShots', 'X3PointShotsAttempted', 'Opp.3PointShotsAttempted', 'FreeThrows', 'Opp.FreeThrows', 'FreeThrowsAttempted', 'Opp.FreeThrowsAttempted', 'Conference', 'Opp.Conference'])
 
     #adding dummy variables back into the main dataframe
-    nba = pd.concat([nba, conference, oppconference, home, wins], axis = 1)
+    nba = pd.concat([nba, conference, oppconference, home], axis = 1)
 
     return nba
 
@@ -64,8 +61,8 @@ def nba_split(df):
     '''
     This function splits a dataframe into train, validate, and test sets
     '''
-    train_and_validate, test = train_test_split(df, train_size=.8, random_state=123, stratify=df.W)
-    train, validate = train_test_split(train_and_validate, train_size = .7, random_state=123, stratify=train_and_validate.W)
+    train_and_validate, test = train_test_split(df, train_size=.8, random_state=123)
+    train, validate = train_test_split(train_and_validate, train_size = .7, random_state=123)
     return train, validate, test
 
 def wrangle_nba():
