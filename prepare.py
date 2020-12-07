@@ -203,6 +203,9 @@ def prep_advanced_metrics():
     teams.drop(rows_to_drop, inplace = True)
     # restting the index
     teams = teams.reset_index(drop=True)
+    #deleting point columns
+    del teams['ORtg']
+    del teams['DRtg']
     # save the cleaned dataframe as a csv
     teams.to_csv('cleaned_advanced_metrics_data.csv')
 
@@ -267,7 +270,7 @@ def scaled_advanced_metrics():
     #assigns the scaling method as min-max scaler
     scaler = sklearn.preprocessing.MinMaxScaler()
     #identifies the columns to scale
-    columns_to_scale = ['FieldGoals.', 'X3PointShots.', 'FreeThrows.', 'OffRebounds', 'TotalRebounds', 'Assists', 'Steals', 'Blocks', 'Turnovers', 'TotalFouls', 'Opp.FieldGoals.', 'Opp.3PointShots.', 'Opp.FreeThrows.', 'Opp.OffRebounds', 'Opp.TotalRebounds', 'Opp.Assists', 'Opp.Steals', 'Opp.Blocks', 'Opp.Turnovers', 'Opp.TotalFouls', 'ORtg', 'DRtg', 'Pace', 'FTr', '3PAr', 'TS%', 'TRB%', 'AST%', 'STL%', 'BLK%', 'eFG%', 'TOV%', 'ORB%', 'FT/FGA', 'Opp.eFG%', 'Opp.TOV%', 'DRB%', 'Opp.FT/FGA']
+    columns_to_scale = ['FieldGoals.', 'X3PointShots.', 'FreeThrows.', 'OffRebounds', 'TotalRebounds', 'Assists', 'Steals', 'Blocks', 'Turnovers', 'TotalFouls', 'Opp.FieldGoals.', 'Opp.3PointShots.', 'Opp.FreeThrows.', 'Opp.OffRebounds', 'Opp.TotalRebounds', 'Opp.Assists', 'Opp.Steals', 'Opp.Blocks', 'Opp.Turnovers', 'Opp.TotalFouls', 'Pace', 'FTr', '3PAr', 'TS%', 'TRB%', 'AST%', 'STL%', 'BLK%', 'eFG%', 'TOV%', 'ORB%', 'FT/FGA', 'Opp.eFG%', 'Opp.TOV%', 'DRB%', 'Opp.FT/FGA']
     #adds '_scaled' to the end of the newly scaled columns to identify differences
     new_column_names = [c + '_scaled' for c in columns_to_scale]
     #fts the columns to the scaler
