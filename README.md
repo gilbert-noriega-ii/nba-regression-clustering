@@ -38,7 +38,7 @@ ___
 >
 > - A clearly named final notebook. This notebook will be what will contain plenty of markdown documentation and cleaned up code.
 > - A README that explains what the project is, how to reproduce the work, and my notes from project planning
-> - Python modules that automate the data acquisistion and preparation process. These modules will be imported and used in the final notebook.
+> - Python modules that automate the data acquisistion, preparation and modeling process. These modules will be imported and used in the final notebook.
   
 [back to the top](#section_6)
 
@@ -71,12 +71,29 @@ ___
 | Opp.TotalFouls | number of fouls for the away team |
 | home_is_west | home team is in the western conference |
 | away_is_west | away team is in the western conference |
+| Pace | An estimate of possesion per 48 minutes |
+| FTr | Number of Free throw attempts per Field Goal attempts |
+| 3PAr | Percentage of Field Goal attempts from 3 point range |
+| TS% | A measure of shooting efficiency that takes into account 2-point, 3-point and Free Throw field goals |
+| TRB% | An estimate of the percentage of available rebounds a player grabbed while he was on the floor |
+| AST% | An estimate of the percentage of teammate field goals a player assisted while he was on the floor |
+| STL% | An estimate of the percentage of opponent possessions that end with a steal by a player while he was on the floor |
+| BLK& | An estimate of the percentage of opponent 2-point field goal attempts blocked by a player while he was on the floor |
+| eFG% | This statistic adjust for the fact that a 3-point field goal is worth more than a 2-point field goal |
+| TOV% | An estimate of turnovers committed per 100 plays |
+| ORB% | An estimate of the percentage of available offensive rebounds a player grabbed while he was on the floor |
+| FT/FGA | Free Throws made per Field Goal attempt |
+| Opp.eFG% | Opponent effective field goal percentage |
+| Opp.TOV% | Opponent turnover percentage |
+| DRB% | An estimate of the percentage of available defensive rebounds a player grabbed while he was on the floor |
+| Opp.FT/FGA | Opponent Free Throws made per Field Goal attempt |
+
 
 <br>
 
 |  Target  | Definition |
 |:-------- |:---------- |
-|  W  | win for the home team |
+|  TeamPoints  | number of points scored by the team |
 
 <br>
 
@@ -90,31 +107,51 @@ ___
 
 >### Thoughts
 >
-> - We could add a new feature?
-> - Should I turn the categorical variables into booleans?
+> - We could add a new feature? advanced features?
+> - Basketball reference has a great deal of statistics but it will come down to time if we can add them
 
 <br>
 
 >### Hypothesis
-> - Hypothesis 1: Is there a relationship between wins and home games?
->   - H<sub>0</sub>: There is no dependence between wins and home games
->   - H<sub>a</sub>: There is a dependence between wins and home games
+> - Hypothesis 1: Are the Home team point totals dramatically different from the Away team points?
+>   - H<sub>0</sub>: The average points scored by Home and Away teams are not significantly different
+>   - H<sub>a</sub>: The average points scored by Home and Away teams are significantly different
 >
-> - Hypothesis 2: Do winning teams have the same number of turnovers as losing teams?
->   - H<sub>0</sub>: Win or Lose teams have the same number of turnovers
->   - H<sub>a</sub>: Win or Lose teams do not have the same number of turnovers.
+> - Hypothesis 2: Do Home teams in the West score more points than Home teams in the East?
+>   - H<sub>0</sub>: The average points scored by West and East Home teams are not significantly different
+>   - H<sub>a</sub>: The average points scored by West and East Home teams are significantly different
 >
-> - Hypothesis 3: Do winning teams have the same number of fouls as losing teams?
->   - H<sub>0</sub>: Win or Lose teams have the same number of fouls
->   - H<sub>a</sub>: Win or Lose teams do not have the same number of fouls.
+> - Hypothesis 3: Do Away teams in the West score more points than Away teams in the East?
+>   - H<sub>0</sub>: The average points scored by West and East Away teams are not significantly different
+>   - H<sub>a</sub>: The average points scored by West and East Away teams are significantly different
 >
-> - Hypothesis 4: Do winning teams have the same free throw percentage as losing teams?
->   - H<sub>0</sub>: Win or Lose teams shoot the same percentage of free throws
->   - H<sub>a</sub>: Win or Lose teams do not shoot the same percentage of free throws
+> - Hypothesis 4: Is there a significant difference between points scored by a team and their opponents blocks?
+>   - H<sub>0</sub>: The average points scored by a team and the number of their opponents blocks are not significantly different
+>   - H<sub>a</sub>: The average points scored by a team and the number of their opponents blocks are significantly different
 >
->- Hypothesis 5: Do winning teams have the same number of offensive rebounds as losing teams?
->   - H<sub>0</sub>: Win or Lose teams have the same number of offensive rebounds
->   - H<sub>a</sub>: Win or Lose teams do not have the same number of offensive rebounds.
+>- Hypothesis 5: Is there a significant difference in total point scored between shooting clusters?
+>   - H<sub>0</sub>: The total points scored is the same across all shooting clusters
+>   - H<sub>a</sub>: The total points scored is not the same across all shooting clusters
+>
+>- Hypothesis 6: Is there a significant difference in total points scored between defense clusters?
+>   - H<sub>0</sub>: The total points scored is the same across all defense clusters
+>   - H<sub>a</sub>: The total points scored is not the same across all defense clusters
+>
+>- Hypothesis 7: Is there a significant difference in total points scored between assist/turnover clusters?
+>   - H<sub>0</sub>: The total points scored is the same across all assist/turnover clusters
+>   - H<sub>a</sub>: The total points scored is not the same across all assist/turnover clusters
+>
+>- Hypothesis 8: Is there a significant difference in total points scored between opponent shooting clusters?
+>   - H<sub>0</sub>: The total points scored is the same across all opponent shooting cluster clusters
+>   - H<sub>a</sub>: The total points scored is the not same across all opponent shooting cluster clusters
+>
+>- Hypothesis 9:  Is there a significant difference in total points scored between opponent defensive clusters?
+>   - H<sub>0</sub>: The total points scored is the same across all opponent defensive clusters
+>   - H<sub>a</sub>: The total points scored is not the same across all opponent defensive clusters
+>
+>- Hypothesis 10:  Is there a significant difference in total points scored between opponent assist/turnover clusters?
+>   - H<sub>0</sub>: The total points scored is the same across all assist/turnover clusters
+>   - H<sub>a</sub>: The total points scored is the not same across all assist/turnover clusters
 
 [back to the top](#section_6)
 ___
@@ -133,17 +170,25 @@ ___
 >- prepare
 >    - address data that could mislead models
 >    - create features
+>    - scale the data
 >    - split into train, validate, test
 >    - create a prepare.py to automate the process
 >
 >- explore
+>    - plot correlation values of all variables
 >    - test each hypothesis
->    - plot correlation matrix of all variables
 >    - document and consider the results for modeling
+>
+>- clustering
+>    - create clusters using related features
+>    - test their significance
+>    - document and consider the results for modeling
+>    - create an explore.py to automate the process
 > 
 >- model and evaluation
->    - find which features are most influential using LinearRegression coefficients
->    - try different algorithms: LinearRegression, Decision Tree, Random Forest, K-Nearest Neighbor
+>    - set the baseline
+>    - find which features are most influential using Recursive Feature Elimination
+>    - try different algorithms: LinearRegression, LassoLars, PolyRegression, TweedieRegressor
 >    - evaluate on train
 >    - evaluate on validate
 >    - select best model and test to verify
@@ -151,7 +196,7 @@ ___
 >
 >- conclusion
 >    - summarize findings
->    - provide next steps
+>- provide next steps
 
 
 [back to the top](#section_6)
@@ -163,8 +208,8 @@ ___
 <a id='section_5'></a>
 ## How to Reproduce
 
->1. Download data csv from [here](https://raw.githubusercontent.com/gilbert-noriega-ii/nba-play-classification/main/nba.games.stats.csv)
->2. Install [prepare.py](https://raw.githubusercontent.com/gilbert-noriega-ii/nba-play-classification/main/prepare.py) and [model.py](https://raw.githubusercontent.com/gilbert-noriega-ii/nba-play-classification/main/model.py) into your working directory.
+>1. Download original box score data csv from [here](https://github.com/gilbert-noriega-ii/nba-regression-clustering/blob/main/nba.games.stats.csv) and the cleaned advanced data metrics from [here](https://github.com/gilbert-noriega-ii/nba-regression-clustering/blob/main/cleaned_advanced_metrics_data.csv)
+>2. Install [prepare.py](https://github.com/gilbert-noriega-ii/nba-regression-clustering/blob/main/prepare.py), [explore.py](https://github.com/gilbert-noriega-ii/nba-regression-clustering/blob/main/explore.py) and [model.py](https://github.com/gilbert-noriega-ii/nba-regression-clustering/blob/main/model.py) into your working directory.
 >3. Run a jupyter notebook importing the necessary libraries and functions.
 >4. Follow along in final_report.ipynb or forge your own exploratory path. 
 
