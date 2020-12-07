@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 from sklearn.feature_selection import SelectKBest, f_regression
 from sklearn.feature_selection import RFE
-from sklearn.linear_model import LinearRegression, LassoLars
+from sklearn.linear_model import LinearRegression, LassoLars, TweedieRegressor
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.preprocessing import PolynomialFeatures
 from sklearn.metrics import mean_squared_error
@@ -61,7 +61,7 @@ def select_kbest(predictors, target, number_of_features):
 
 ########################### RFE Function ###########################
 
-def rfe(predictors, target, number_of_features):
+def rfe(predictors, target, number_of_features = 1):
     '''
     This function takes in predictors(features), a target variable and the number of top features we want 
     and returns the top features that lead to the best performing linear regression model. 
@@ -73,7 +73,7 @@ def rfe(predictors, target, number_of_features):
     #setting the hyperparameters to be our linear regression 
     #(as the algorithm to test the features on) 
     #and the number of features to be returned
-    rfe = RFE(lm, number_of_features)
+    rfe_ = RFE(lm, number_of_features)
 
     #Fit the RFE object to our data. 
     #(This means create multiple linear regression models,
@@ -82,16 +82,19 @@ def rfe(predictors, target, number_of_features):
     #Those are the features we want.)
     #Transform our X dataframe to include only 
     #the 'number_of_features' that performed the best
-    rfe.fit_transform(predictors, target)
+    rfe_.fit(predictors, target)
 
-    #Create a mask to hold a list of the features that were selected or not
-    mask = rfe.support_
+    #create ranks
+    ranks = rfe_.ranking_
+
+    #create labels for ranks
+    names = predictors.columns.tolist()
 
     #We get a list of the feature names selected from 
     #X_train using .loc with our mask, 
     #using .columns to get the column names, 
     #and convert the values to a list using .tolist()
-    X_reduced_scaled_rfe = predictors.iloc[:, mask].columns.tolist()
+    X_reduced_scaled_rfe = pd.DataFrame({'features': names, 'rank': ranks}).sort_values('rank')
 
     return X_reduced_scaled_rfe
 
@@ -149,6 +152,22 @@ def poly_linearReg_train(X_train, y_train, degrees):
     return lm_squared_rmse
 
 
+def tweedie_regressor_train(X_train, y_train):
+    '''
+    This function creates a tweedie regressor model
+    for the training dataframe
+    '''
+    # create the model object
+    glm = TweedieRegressor(power=1, alpha=0)
+    # fit the model to our training data. We must specify the column in y_train, 
+    # since we have converted it to a dataframe from a series! 
+    glm.fit(X_train, y_train)
+    # predict train
+    tweedie_pred = glm.predict(X_train)
+    # evaluate rmse
+    tweedie_rmse = mean_squared_error(y_train, tweedie_pred)**(1/2)
+    return tweedie_rmse
+
 ########################### Validate Modeling Functions ###########################
 
 
@@ -200,3 +219,21 @@ def poly_linearReg_validate(X_train, y_train, X_validate, y_validate, degrees):
     # Evaluate RMSE
     lm_squared_rmse = mean_squared_error(y_validate, lm_squared_pred)**(1/2)
     return lm_squared_rmse
+
+
+def tweedie_regressor_validate(X_train, y_train, X_validate, y_validate):
+    '''
+    This function creates a tweedie regressor model
+    for the validate or test dataframe
+    '''
+    # create the model object
+    glm = TweedieRegressor(power=1, alpha=0)
+    # fit the model to our training data. We must specify the column in y_train, 
+    # since we have converted it to a dataframe from a series! 
+    glm.fit(X_train, y_train)
+    # predict train
+    tweedie_pred = glm.predict(X_validate)
+    # evaluate rmse
+    tweedie_rmse = mean_squared_error(y_validate, tweedie_pred)**(1/2)
+
+    return tweedie_rmse
